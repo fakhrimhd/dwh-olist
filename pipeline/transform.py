@@ -100,10 +100,6 @@ class Transform(luigi.Task):
         except Exception as e:
             print(f"Error during data transformation: {e}")
 
-    def output(self):
-        # Define a marker file to indicate task completion
-        return luigi.LocalTarget('transform_data_complete.txt')
-
     def on_success(self):
         # Create marker file upon successful execution
         with self.output().open('w') as f:

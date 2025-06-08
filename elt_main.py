@@ -1,13 +1,28 @@
-from pipeline.extract import *
-from pipeline.load import *
-from pipeline.transform import *
-from pipeline.utils.db_conn import *
+import luigi
+from pipeline.extract import Extract
+from pipeline.load import Load
+from pipeline.transform import Transform
 
-# Execute the functions when the script is run
-if __name__ == '__main__':
-    extract()
-    print("Extract completed.")
-    load()
-    print("Load completed.")
-    transform()
-    print("Transform completed.")
+class Extract(luigi.Task):
+    def run(self):
+        Extract()
+
+class Load(luigi.Task):
+    def requires(self):
+        return Extract()
+
+    def run(self):
+        Load()
+
+class Transform(luigi.Task):
+    def requires(self):
+        return Load()
+
+    def run(self):
+        Transform()
+
+if __name__ == "__main__":
+    # Build the task
+    luigi.build([Extract(),
+                 Load(),
+                 Transform()], local_scheduler=True)
